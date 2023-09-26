@@ -1,11 +1,11 @@
 "use client";
-import { getProviders, signIn, signOut } from "next-auth/react";
+import { getProviders, signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const Navbar = () => {
-  const [userLoggedIn, setUserLoggedIn] = useState(true);
+  const { data: session } = useSession();
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [providers, setProviders] = useState(null);
 
@@ -25,7 +25,7 @@ const Navbar = () => {
       </Link>
 
       <div className="sm:flex hidden">
-        {userLoggedIn ? (
+        {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create" className="black_btn">
               Create Post
@@ -35,11 +35,11 @@ const Navbar = () => {
             </button>
             <Link href="/profile" className="">
               <Image
-                src="/assets/images/logo.svg"
+                src={session?.user.image}
                 alt="Profile Image"
                 height={37}
                 width={37}
-                className="object-contain"
+                className="object-contain rounded-full"
               />
             </Link>
           </div>
@@ -56,14 +56,14 @@ const Navbar = () => {
       </div>
 
       <div className="sm:hidden flex relative">
-        {userLoggedIn ? (
+        {session?.user ? (
           <div className="flex">
             <Image
-              src="/assets/images/logo.svg"
+              src={session?.user.image}
               alt="Profile Image"
               height={37}
               width={37}
-              className="object-contain"
+              className="object-contain rounded-full"
               onClick={() => {
                 setToggleDropdown((prevState) => !prevState);
               }}
